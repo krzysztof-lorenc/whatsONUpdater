@@ -5,6 +5,7 @@
   using System.Windows.Interop;
   using Soloplan.WhatsON.GUI.Logging;
   using Soloplan.WhatsON.Serialization;
+  using Squirrel;
 
   /// <summary>
   /// Interaction logic for App.xaml
@@ -40,14 +41,20 @@
       if (isDark == null)
       {
         isDark = this.config.DarkThemeEnabled;
+
       }
 
       this.IsDarkThemeEnabled = isDark.Value;
       this.themeHelper.ApplyLightDarkMode(isDark.Value);
     }
 
-    protected override void OnStartup(StartupEventArgs e)
+    protected override async void OnStartup(StartupEventArgs e)
     {
+      using (var mgr = UpdateManager.GitHubUpdateManager("https://github.com/lorokl2/whatsONUpdater", null, null, null, true))
+      {
+        await mgr.Result.UpdateApp();
+      }
+
       base.OnStartup(e);
 
       ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;

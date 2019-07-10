@@ -197,7 +197,7 @@ namespace Soloplan.WhatsON.GUI.Common.ConnectorTreeView
         if (connectorGroupViewModel == null)
         {
           log.Debug("{model} doesn't exist, creating...", nameof(ConnectorGroupViewModel));
-          connectorGroupViewModel = this.CreateNewGroupModel(group.Key);
+          connectorGroupViewModel = this.CreateNewGroupModel();
           this.ConnectorGroups.Insert(index, connectorGroupViewModel);
         }
         else
@@ -233,8 +233,6 @@ namespace Soloplan.WhatsON.GUI.Common.ConnectorTreeView
           this.ItemPadding = 0;
           break;
       }
-
-      this.SetConnectionModifiedInTree(false);
     }
 
     /// <summary>
@@ -306,7 +304,8 @@ namespace Soloplan.WhatsON.GUI.Common.ConnectorTreeView
 
     public ConnectorGroupViewModel CreateGroup(string groupName)
     {
-      var model = this.CreateNewGroupModel(groupName);
+      var model = this.CreateNewGroupModel();
+      model.GroupName = groupName;
       this.ConnectorGroups.Add(model);
       this.FireOneGroupChanged();
       this.OnConfigurationChanged(this, EventArgs.Empty);
@@ -324,7 +323,6 @@ namespace Soloplan.WhatsON.GUI.Common.ConnectorTreeView
       {
         this.configurationChanging = true;
         this.ConfigurationChanged?.Invoke(sender, args);
-        this.SetConnectionModifiedInTree(true);
       }
       finally
       {
@@ -463,13 +461,9 @@ namespace Soloplan.WhatsON.GUI.Common.ConnectorTreeView
       return new ObservableCollection<ConnectorGroupViewModel>();
     }
 
-    private ConnectorGroupViewModel CreateNewGroupModel(string groupName)
+    private ConnectorGroupViewModel CreateNewGroupModel()
     {
-      var model = new ConnectorGroupViewModel
-      {
-        GroupName = groupName
-      };
-
+      var model = new ConnectorGroupViewModel();
       model.EditItem += (s, e) => this.EditItem?.Invoke(s, e);
       model.DeleteItem += this.DeleteGroup;
       model.ConfigurationChanged += (s, e) => this.OnConfigurationChanged(this, EventArgs.Empty);
@@ -496,18 +490,6 @@ namespace Soloplan.WhatsON.GUI.Common.ConnectorTreeView
       {
         this.OnPropertyChanged(nameof(this.OneGroup));
         this.prevOneGroupValue = this.OneGroup;
-      }
-    }
-
-    /// <summary>
-    /// Sets <see cref="TreeItemViewModel.ConfigurationModifiedInTree"/> of groups.
-    /// </summary>
-    /// <param name="value">The value which should be set.</param>
-    private void SetConnectionModifiedInTree(bool value)
-    {
-      foreach (var connectorGroupViewModel in this.ConnectorGroups)
-      {
-        connectorGroupViewModel.ConfigurationModifiedInTree = value;
       }
     }
 

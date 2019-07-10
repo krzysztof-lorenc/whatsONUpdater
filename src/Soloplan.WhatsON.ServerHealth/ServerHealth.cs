@@ -54,7 +54,12 @@ namespace Soloplan.WhatsON.ServerHealth
     /// </summary>
     public int AllowedFailedAttempts
     {
-      get => int.Parse(this.ConnectorConfiguration.GetConfigurationByKey(AllowedFailedAttemptsProperty).Value);
+      get
+      {
+        var configurationItem = this.ConnectorConfiguration.GetConfigurationByKey(AllowedFailedAttemptsProperty);
+        return configurationItem.Value == null ? 5 : int.Parse(configurationItem.Value);
+      }
+
       set => this.ConnectorConfiguration.GetConfigurationByKey(AllowedFailedAttemptsProperty).Value = value.ToString(CultureInfo.InvariantCulture);
     }
 
