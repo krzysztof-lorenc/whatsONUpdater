@@ -50,9 +50,9 @@
 
     protected override async void OnStartup(StartupEventArgs e)
     {
-      using (var mgr = UpdateManager.GitHubUpdateManager("https://github.com/lorokl2/whatsONUpdater"))
+      //using (var mgr = UpdateManager.GitHubUpdateManager("https://github.com/lorokl2/whatsONUpdater"))
       {
-        await mgr.Result.UpdateApp();
+        //await mgr.Result.UpdateApp();
       }
 
       base.OnStartup(e);
