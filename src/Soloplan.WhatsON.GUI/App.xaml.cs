@@ -1,6 +1,7 @@
 ﻿namespace Soloplan.WhatsON.GUI
 {
   using System.Net;
+  using System.Threading.Tasks;
   using System.Windows;
   using System.Windows.Interop;
   using Soloplan.WhatsON.GUI.Logging;
@@ -48,14 +49,17 @@
       this.themeHelper.ApplyLightDarkMode(isDark.Value);
     }
 
-    protected override async void OnStartup(StartupEventArgs e)
+    protected override void OnStartup(StartupEventArgs e)
     {
-      //using (var mgr = UpdateManager.GitHubUpdateManager("https://github.com/lorokl2/whatsONUpdater"))
-      {
-        //await mgr.Result.UpdateApp();
-      }
-
       base.OnStartup(e);
+
+      Task.Run(async () =>
+      {
+        using (var mgr = UpdateManager.GitHubUpdateManager("https://github.com/lorokl2/whatsONUpdater", null, null, null, true))
+        {
+          await mgr.Result.UpdateApp();
+        }
+      });
 
       ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
