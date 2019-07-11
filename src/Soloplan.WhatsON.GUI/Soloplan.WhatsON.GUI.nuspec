@@ -13,5 +13,6 @@
   </metadata>
   <files>
     <file src="*.*" target="lib\net45\" exclude="*.pdb;*.nupkg;*.vshost.*"/>
+    <file src="plugins\*.*" target="lib\net45\plugins\" exclude="*.pdb;*.nupkg;*.vshost.*"/>
   </files>
 </package>
